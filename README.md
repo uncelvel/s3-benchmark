@@ -15,17 +15,13 @@ To leverage this tool, the following prerequisites apply:
 Obtain a local copy of the repository using the following git command with any directory that is convenient:
 
 ```
-git clone https://github.com/wasabi-tech/s3-benchmark.git
+sudo apt install golang -y 
+git clone https://github.com/uncelvel/s3-benchmark.git
+rm -f s3-benchmark s3-benchmark.ubuntu 
+go mod init example.com
+go mod tidy 
+go build s3-benchmark.go
 ```
-
-You should see the following files in the s3-benchmark directory.
-LICENSE	README.md		s3-benchmark.go	s3-benchmark.ubuntu
-
-If the test is being run on Ubuntu version 16.04 LTS (the current long term release), the binary
-executable s3-benchmark.ubuntu will run the benchmark testing without having to build the executable. 
-
-Otherwise, to build the s3-benchmark executable, you must issue this following command:
-/usr/bin/go build s3-bechmark.go
  
 # Command Line Arguments
 Below are the command line arguments to the program (which can be displayed using -help):
@@ -55,13 +51,20 @@ for each operation PUT, GET and DELETE the results in terms of data speed and op
 writes all results to the log file benchmark.log.
 
 ```
-ubuntu:~/s3-benchmark$ ./s3-benchmark.ubuntu -a MY-ACCESS-KEY -b jeff-s3-benchmark -s MY-SECRET-KEY -t 10 
-Wasabi benchmark program v2.0
-Parameters: url=http://s3.wasabisys.com, bucket=jeff-s3-benchmark, duration=60, threads=10, loops=1, size=1M
-Loop 1: PUT time 60.1 secs, objects = 5484, speed = 91.3MB/sec, 91.3 operations/sec.
-Loop 1: GET time 60.1 secs, objects = 5483, speed = 91.3MB/sec, 91.3 operations/sec.
-Loop 1: DELETE time 1.9 secs, 2923.4 deletes/sec.
-Benchmark completed.
+for thead in 1 2 4 8 16
+do
+    for size in 4k 16k 1M 2M 4M 16M 128M 
+    do 
+    echo "=========================="
+    date 
+    ./s3-benchmark -u https://han01.vstorage.vngcloud.vn -r HAN01 \
+               -b ghtk-poc \
+               -a "f29064732c538e51c7e2c8a4f62e5714" \
+               -s "db746d0aa31ae679878bc9b0a6233732"  \
+               -t $thead -z $size
+    done 
+    echo "=========================="
+done
 ```
 
 # Note
