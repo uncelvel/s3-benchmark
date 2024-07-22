@@ -16,7 +16,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/pivotal-golang/bytefmt"
+	// "github.com/pivotal-golang/bytefmt"
+	"code.cloudfoundry.org/bytefmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -193,7 +194,8 @@ func hmacSHA1(key []byte, content string) []byte {
 
 func setSignature(req *http.Request) {
 	// Setup default parameters
-	dateHdr := time.Now().UTC().Format("20060102T150405Z")
+	// dateHdr := time.Now().UTC().Format("20060102T150405Z")
+	dateHdr := time.Now().UTC().Format(time.UnixDate)
 	req.Header.Set("X-Amz-Date", dateHdr)
 	// Get the canonical resource and header
 	canonicalResource := req.URL.EscapedPath()
